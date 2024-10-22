@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống Sàng lọc Hồ sơ AI</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        .header {
+            background-color: #3498db;
+            color: white;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        ul li:before {
+            content: "✓ ";
+            color: #3498db;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        input[type="file"] {
+            margin: 20px 0;
+            padding: 10px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+        }
+
+        .result p {
+            margin: 10px 0;
+        }
+
+        .result ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Hệ thống Sàng lọc Hồ sơ Dựa trên AI</h1>
+        </div>
+        <div class="content">
+            <p>Hệ thống này hỗ trợ tải lên các file TXT và PDF, và sẽ thực hiện các chức năng sau:</p>
+            <ul>
+                <li>Phân loại Hồ sơ</li>
+                <li>Đề xuất Công việc Phù hợp</li>
+                <li>Phân tích Hồ sơ (Trích xuất Thông tin)</li>
+            </ul>
+
+            <h2>Tải lên Hồ sơ của bạn</h2>
+            <form action="/pred" method="post" enctype="multipart/form-data">
+                <input type="file" name="resume" accept=".pdf, .txt" required>
+                <input type="submit" value="Gửi">
+            </form>
+
+            {% if message %}
+            <p class="text-center">{{message}}</p>
+            {% endif %}
+
+            {% if predicted_category %}
+            <div class="result">
+                <h2>Kết quả Phân tích</h2>
+                <p><strong>Danh mục:</strong> {{predicted_category}}</p>
+                <p><strong>Công việc Đề xuất:</strong> {{recommended_job}}</p>
+
+                <h3>Thông tin Trích xuất</h3>
+                <p><strong>Tên:</strong> {{name}}</p>
+                <p><strong>Số Điện thoại:</strong> {{phone}}</p>
+                <p><strong>Email:</strong> {{email}}</p>
+
+                {% if extracted_skills %}
+                <h3>Kỹ năng</h3>
+                <ul>
+                    {% for skill in extracted_skills %}
+                    <li>{{ skill }}</li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>Không tìm thấy kỹ năng nào.</p>
+                {% endif %}
+
+                {% if extracted_education %}
+                <h3>Học vấn</h3>
+                <ul>
+                    {% for edu in extracted_education %}
+                    <li>{{ edu }}</li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>Không tìm thấy thông tin học vấn nào.</p>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>
